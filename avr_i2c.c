@@ -29,6 +29,10 @@ volatile int i2c_out_len = 0;
 volatile bool i2c_out_data_ready = false;
 volatile bool i2c_N_bytes_sent = false;
 
+#ifdef DEBUG_I2C
+	volatile uint8_t saved_status_codes[32];
+	volatile int saved_status_code_ptr = 0;
+#endif
 volatile uint8_t debug = 0;
 
 void I2C_init(uint8_t slave_address) {
@@ -47,6 +51,12 @@ void I2C_reset() {
 
     TWDR = 0x00;
     TWCR |= (1<<TWINT |1<<TWSTO);
+}
+
+inline void debug_save_status_code(uint8_t status_code) {
+#	ifdef DEBUG_I2C
+	saved_status_codes[saved_status_code_ptr++] = status_code;
+#   endif
 }
 
 void I2C_pack_one(uint16_t message_name, uint16_t message) {
@@ -139,6 +149,7 @@ ISR(TWI_vect) {
     cli();
     uint8_t status_code;
     status_code = TWSR & 0xf8;
+	debug_save_status_code(status_code);
 
     switch (status_code) {
 

@@ -5,7 +5,7 @@
 #include <stdbool.h>
 
 #include "avr_i2c.h"
-#include "i2c_common.h"
+#include "common/i2c_common.h"
 
 int main(void){
 
