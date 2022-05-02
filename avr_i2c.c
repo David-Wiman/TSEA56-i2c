@@ -146,7 +146,6 @@ int I2C_unpack(uint16_t *message_names, uint16_t *messages) {
 }
 
 ISR(TWI_vect) {
-    cli();
     uint8_t status_code;
     status_code = TWSR & 0xf8;
 	debug_save_status_code(status_code);
@@ -226,6 +225,4 @@ ISR(TWI_vect) {
             I2C_reset();
             break;
     }
-
-    sei();
 }
